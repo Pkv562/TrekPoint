@@ -6,12 +6,19 @@
  */
 
 import React from 'react';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import TrekPointLanding from './app/landing_page';
+import EmailSignupFlow from './app/authentication/email';
+import ExplorePage from './app/dashboard/explore_page';
+import CommunityPage from './app/dashboard/community_page';
+import 'react-native-gesture-handler';
+import { enableScreens } from 'react-native-screens';
+enableScreens();
+
+const Stack = createStackNavigator();
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -19,18 +26,17 @@ function App() {
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="TrekPointLanding"
+          screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="TrekPointLanding" component={TrekPointLanding} />
+          <Stack.Screen name="EmailSignupFlow" component={EmailSignupFlow} />
+          <Stack.Screen name="ExplorePage" component={ExplorePage} />
+          <Stack.Screen name="CommunityPage" component={CommunityPage} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={[styles.container, { paddingTop: safeAreaInsets.top }]}>
-      <TrekPointLanding />
-    </View>
   );
 }
 

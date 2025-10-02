@@ -4,113 +4,107 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   StatusBar,
+  Image,
 } from 'react-native';
-import { Mountain, MapPin, Compass, ChevronRight } from 'lucide-react-native';
+import { Mountain } from 'lucide-react-native';
+import { useNavigation, NavigationProp } from '@react-navigation/native'; 
 
-const { width, height } = Dimensions.get('window');
+type RootStackParamList = {
+  EmailSignupFlow: undefined;
+  ExplorePage: undefined;
+};
 
 export default function TrekPointLanding() {
-  const [activeButton, setActiveButton] = useState<'login' | 'signup' | null>(null);
+  const [activeButton, setActiveButton] = useState<string | null>(null);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const handleLogin = () => {
-    setActiveButton('login');
-    // Navigation logic would go here
-    setTimeout(() => setActiveButton(null), 300);
-  };
-
-  const handleSignup = () => {
-    setActiveButton('signup');
-    // Navigation logic would go here
+  const handlePress = (type: string) => {
+    setActiveButton(type);
+    if (type === 'google' || type === 'facebook') {
+      navigation.navigate('ExplorePage'); 
+    } else if (type === 'email') {
+      navigation.navigate('EmailSignupFlow');
+    }
     setTimeout(() => setActiveButton(null), 300);
   };
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      
-      {/* Background decorative circles */}
-      <View style={styles.bgCircle1} />
-      <View style={styles.bgCircle2} />
 
-      {/* Main Content */}
-      <View style={styles.content}>
-        {/* Logo Container */}
-        <View style={styles.logoContainer}>
-          <View style={styles.logoBox}>
-            <Mountain color="#ffffff" size={64} strokeWidth={1.5} />
-          </View>
-        </View>
-
-        {/* App Name */}
-        <Text style={styles.appName}>TrekPoint</Text>
-        
-        {/* Tagline */}
-        <Text style={styles.tagline}>Your journey begins here</Text>
-
-        {/* Feature Icons */}
-        <View style={styles.featuresContainer}>
-          <View style={styles.featureItem}>
-            <View style={styles.featureIcon}>
-              <MapPin color="#a7f3d0" size={24} />
-            </View>
-            <Text style={styles.featureText}>Discover</Text>
-          </View>
-
-          <View style={styles.featureItem}>
-            <View style={styles.featureIcon}>
-              <Compass color="#a7f3d0" size={24} />
-            </View>
-            <Text style={styles.featureText}>Navigate</Text>
-          </View>
-
-          <View style={styles.featureItem}>
-            <View style={styles.featureIcon}>
-              <Mountain color="#a7f3d0" size={24} />
-            </View>
-            <Text style={styles.featureText}>Explore</Text>
-          </View>
-        </View>
-
-        {/* Action Buttons */}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[
-              styles.signupButton,
-              activeButton === 'signup' && styles.buttonPressed
-            ]}
-            onPress={handleSignup}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.signupButtonText}>Get Started</Text>
-            <ChevronRight color="#065f46" size={20} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.loginButton,
-              activeButton === 'login' && styles.buttonPressed
-            ]}
-            onPress={handleLogin}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.loginButtonText}>Log In</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Terms Text */}
-        <Text style={styles.termsText}>
-          By continuing, you agree to our Terms of Service and Privacy Policy
-        </Text>
+      {/* Logo */}
+      <View style={styles.logoContainer}>
+        <Mountain color="#34d399" size={64} strokeWidth={2.5} />
       </View>
 
-      {/* Bottom Decoration */}
-      <View style={styles.bottomDots}>
-        <View style={[styles.dot, styles.dotInactive]} />
-        <View style={[styles.dot, styles.dotActive]} />
-        <View style={[styles.dot, styles.dotInactive]} />
+      {/* Headline */}
+      <Text style={styles.headline}>
+        Sign up or log in{'\n'}to start exploring
+      </Text>
+
+      {/* Buttons */}
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[
+            styles.socialButton,
+            styles.googleButton,
+            activeButton === 'google' && styles.buttonPressed,
+          ]}
+          onPress={() => handlePress('google')}
+          activeOpacity={0.8}
+        >
+          <Image
+            source={{
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+            }}
+            style={styles.socialIcon}
+          />
+          <Text style={styles.socialButtonText}>Continue with Google</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.socialButton,
+            styles.facebookButton,
+            activeButton === 'facebook' && styles.buttonPressed,
+          ]}
+          onPress={() => handlePress('facebook')}
+          activeOpacity={0.8}
+        >
+          <Image
+            source={{
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png',
+            }}
+            style={styles.socialIcon}
+          />
+          <Text style={styles.socialButtonText}>Continue with Facebook</Text>
+        </TouchableOpacity>
+
+        <View style={styles.orContainer}>
+          <View style={styles.orLine} />
+          <Text style={styles.orText}>or</Text>
+          <View style={styles.orLine} />
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.emailButton,
+            activeButton === 'email' && styles.buttonPressed,
+          ]}
+          onPress={() => handlePress('email')}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.emailButtonText}>Continue with email</Text>
+        </TouchableOpacity>
       </View>
+
+      {/* Terms */}
+      <Text style={styles.termsText}>
+        By continuing to use TrekPoint, you agree to our{' '}
+        <Text style={styles.link}>Terms of Service</Text> and{' '}
+        <Text style={styles.link}>Privacy Policy</Text>.
+      </Text>
     </View>
   );
 }
@@ -118,146 +112,118 @@ export default function TrekPointLanding() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#065f46',
-    position: 'relative',
-  },
-  bgCircle1: {
-    position: 'absolute',
-    top: 80,
-    left: -50,
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  bgCircle2: {
-    position: 'absolute',
-    bottom: 150,
-    right: -80,
-    width: 350,
-    height: 350,
-    borderRadius: 175,
-    backgroundColor: 'rgba(110, 231, 183, 0.15)',
-  },
-  content: {
-    flex: 1,
+    backgroundColor: '#000', 
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
-    zIndex: 10,
   },
   logoContainer: {
+    marginTop: 60,
     marginBottom: 32,
-  },
-  logoBox: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    padding: 24,
-    borderRadius: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  appName: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 12,
-    letterSpacing: -1,
-  },
-  tagline: {
-    fontSize: 18,
-    color: '#a7f3d0',
-    marginBottom: 48,
-    textAlign: 'center',
-  },
-  featuresContainer: {
-    flexDirection: 'row',
-    gap: 32,
-    marginBottom: 64,
-  },
-  featureItem: {
     alignItems: 'center',
   },
-  featureIcon: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 12,
-    borderRadius: 50,
-    marginBottom: 8,
-  },
-  featureText: {
-    fontSize: 12,
-    color: '#a7f3d0',
+  headline: {
+    fontSize: 24,
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: '600',
+    marginBottom: 40,
+    lineHeight: 32,
   },
   buttonsContainer: {
     width: '100%',
-    maxWidth: 380,
-    gap: 16,
+    maxWidth: 400,
+    alignItems: 'center',
+    gap: 18,
   },
-  signupButton: {
-    backgroundColor: '#ffffff',
+  socialButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 32,
     paddingVertical: 16,
     paddingHorizontal: 24,
-    borderRadius: 16,
+    width: '100%',
+    marginBottom: 0,
+    justifyContent: 'flex-start',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-    gap: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  signupButtonText: {
-    color: '#065f46',
+  googleButton: {
+    backgroundColor: '#2563eb',
+    marginBottom: 14,
+  },
+  facebookButton: {
+    backgroundColor: '#1e40af',
+    marginBottom: 14,
+  },
+  socialIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 16,
+    borderRadius: 12,
+    backgroundColor: '#fff',
+  },
+  socialButtonText: {
+    color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
   },
-  loginButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#ffffff',
+  orContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 10,
+    width: '100%',
     justifyContent: 'center',
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#374151',
+    marginHorizontal: 8,
+  },
+  orText: {
+    color: '#a7f3d0',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  emailButton: {
+    backgroundColor: '#fff',
+    borderRadius: 32,
     paddingVertical: 16,
     paddingHorizontal: 24,
-    borderRadius: 16,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 0,
+    marginBottom: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  loginButtonText: {
-    color: '#ffffff',
+  emailButtonText: {
+    color: '#111827',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   buttonPressed: {
     opacity: 0.7,
     transform: [{ scale: 0.98 }],
   },
   termsText: {
-    fontSize: 11,
-    color: '#a7f3d0',
+    fontSize: 13,
+    color: '#d1d5db',
     textAlign: 'center',
-    marginTop: 32,
-    opacity: 0.75,
-    paddingHorizontal: 32,
+    marginTop: 40,
+    marginBottom: 24,
+    opacity: 0.85,
+    paddingHorizontal: 16,
   },
-  bottomDots: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
-    paddingBottom: 40,
-    zIndex: 10,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  dotInactive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  },
-  dotActive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  link: {
+    color: '#34d399',
+    textDecorationLine: 'underline',
   },
 });
