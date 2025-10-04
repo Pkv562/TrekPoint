@@ -29,6 +29,7 @@ export default function Navbar({ activeTab, onTabPress }: NavbarProps) {
     onTabPress(tabName);
     if (tabName === 'Explore') navigation.navigate('ExplorePage');
     if (tabName === 'Community') navigation.navigate('CommunityPage');
+    if (tabName === 'Saved') navigation.navigate('SavedPage'); // <-- Add this line
   };
 
   return (
@@ -64,7 +65,7 @@ export default function Navbar({ activeTab, onTabPress }: NavbarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#18181b',
+    backgroundColor: 'black',
     paddingVertical: 8,
     borderTopWidth: 1,
     borderTopColor: '#232323',

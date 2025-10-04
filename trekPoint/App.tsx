@@ -14,6 +14,7 @@ import TrekPointLanding from './app/landing_page';
 import EmailSignupFlow from './app/authentication/email';
 import ExplorePage from './app/dashboard/explore_page';
 import CommunityPage from './app/dashboard/community_page';
+import SavedPage from './app/dashboard/saved_page';
 import 'react-native-gesture-handler';
 import { enableScreens } from 'react-native-screens';
 enableScreens();
@@ -34,6 +35,7 @@ function App() {
           <Stack.Screen name="EmailSignupFlow" component={EmailSignupFlow} />
           <Stack.Screen name="ExplorePage" component={ExplorePage} />
           <Stack.Screen name="CommunityPage" component={CommunityPage} />
+          <Stack.Screen name="SavedPage" component={SavedPage} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
